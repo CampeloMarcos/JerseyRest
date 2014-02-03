@@ -3,19 +3,22 @@ package controller;
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 
+import services.ApplicationServiceBase;
 import services.ProdutoService;
 import domain.Produto;
 
 @Path("/produto")
+@SuppressWarnings({"rawtypes"})
 public class ProdutoController extends ControllerBase<Produto> {
 
-	public ProdutoController() {
-		// Apenas para satisfazer as dependencias do CDI
+	@Inject
+	private ProdutoService produtoService;
+
+	@Override
+	public ApplicationServiceBase getService() {
+		return produtoService;
 	}
 	
-	@Inject
-	public ProdutoController(ProdutoService service) {
-		super.service = service;
-	}
+	
 
 }

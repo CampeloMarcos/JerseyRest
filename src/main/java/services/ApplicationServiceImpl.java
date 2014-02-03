@@ -8,24 +8,22 @@ import dao.BaseDAO;
 import domain.EntityBase;
 
 @Dependent
-public class ApplicationServiceImpl<T extends EntityBase> implements ApplicationServiceBase<T> {
+@SuppressWarnings({"unchecked", "rawtypes"})
+public abstract class ApplicationServiceImpl<T extends EntityBase> implements ApplicationServiceBase<T> {
 
-	protected BaseDAO<T, Integer> dao;
-	
-	
 	public T getById(Integer id){
-		return dao.getById(id);
+		return (T) getDao().getById(id);
 	}
 
 
 	public List<T> listAll() {
-		return dao.listAll();
+		return getDao().listAll();
 	}
 
 	@Override
 	public String create(T t) {
 		validateBeforeCreate();
-		dao.create(t);
+		getDao().create(t);
 		return "sucesso";
 	}
 
@@ -36,14 +34,16 @@ public class ApplicationServiceImpl<T extends EntityBase> implements Application
 
 	@Override
 	public String update(T t) {
-		dao.update(t);
+		getDao().update(t);
 		return "sucesso";
 	}
 
 	@Override
 	public void remove(T t) {
-		dao.delete(t);
+		getDao().delete(t);
 		
 	}
+	
+	public abstract BaseDAO getDao();
 	
 }

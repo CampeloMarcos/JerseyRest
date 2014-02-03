@@ -18,19 +18,21 @@ import services.ApplicationServiceBase;
 import domain.EntityBase;
 
 
-public class ControllerBase<T extends EntityBase> {
+
+@SuppressWarnings({"unchecked","rawtypes"})
+public abstract class ControllerBase<T extends EntityBase> {
 
 	protected static final String JSON = MediaType.APPLICATION_JSON;
 	protected static final String TEXTO = MediaType.TEXT_PLAIN;
 	protected static final String HTML = MediaType.TEXT_HTML;
 	
-	protected ApplicationServiceBase<T> service;
+	
 
 	@POST
 	@Consumes(JSON)
 	@Produces(JSON)
 	public String create(T t) {
-		service.create(t);
+		getService().create(t);
 		return "sucesso";
 	}
 
@@ -38,21 +40,21 @@ public class ControllerBase<T extends EntityBase> {
 	@Path("/{id}")
 	@Produces(JSON)
 	public T getById(@PathParam("id") String id) {
-		T t = (T) service.getById(Integer.parseInt(id));
+		T t = (T) getService().getById(Integer.parseInt(id));
 		return t;
 	}
 
 	@GET
 	@Produces(JSON)
 	public List<T> listAll() {
-		return service.listAll();
+		return getService().listAll();
 	}
 
 	@PUT
 	@Consumes(JSON)
 	@Produces(TEXTO)
 	public String update(T t) {
-		service.update(t);
+		getService().update(t);
 		return "sucesso";
 	}
 
@@ -62,10 +64,13 @@ public class ControllerBase<T extends EntityBase> {
 	public String delete(@PathParam("id") String id) {
 		if (StringUtils.isNotEmpty(id)) {
 			Integer idd = Integer.parseInt(id);
-			T t = (T) service.getById(idd);
-			service.remove(t);
+			T t = (T) getService().getById(idd);
+			getService().remove(t);
 		}
 		return "sucesso";
 	}
+	
+	
+	public abstract ApplicationServiceBase getService();
 
 }
